@@ -6,4 +6,7 @@ $app->get('/', function () use ($app) {
 });
 
 // Page d'inscription 
-
+$app->get('/register', function () use ($app) {
+    return $app['twig']->render('register.html.twig');
+});
+// TODO : Page d'inscription
