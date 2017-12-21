@@ -16,3 +16,6 @@ $app->register(new Silex\Provider\AssetServiceProvider(), array(
 ));
 
 // Register services.
+$app['dao.user'] = function ($app) {
+    return new Gedimagination\DAO\UserDAO($app['db']);
+};
