@@ -1,8 +1,9 @@
-{% include 'header.html' %}
-        <article>
+{% extends 'layout.html.twig' %}
+{% block title %}Accueil{% endblock %}
+
+{% block content %}
             <h1>Concours Gedimagination</h1>
-            <p>Bienvenue sur le site du concours Gedimagination développé suite à la collaboration des groupes <b>Gedimat</b> et <b>Interway</b></p>
+            <p>Bienvenue sur le site du concours Gedimagination développé par Négomat suite à la collaboration des groupes <b>Gedimat</b> et <b>Interway</b></p>
             <h2>Inscription</h2>
             <p>Vous pouvez vous inscrire au concours dans la section "Inscription" prévue a cet effet<p/>
-        </article>
-{% include 'footer.html' %}
+{% endblock %}
