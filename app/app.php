@@ -14,6 +14,22 @@ $app->register(new Silex\Provider\TwigServiceProvider(), array(
 $app->register(new Silex\Provider\AssetServiceProvider(), array(
     'assets.version' => 'v1'
 ));
+$app->register(new Silex\Provider\SessionServiceProvider());
+
+// config 'Pare feu' du Security service provide
+$app->register(new Silex\Provider\SecurityServiceProvider(), array(
+    'security.firewalls' => array(
+        'secured' => array(
+            'pattern' => '^/',
+            'anonymous' => true,
+            'logout' => true,
+            'form' => array('login_path' => '/login', 'check_path' => '/login_check'),
+            'users' => function () use ($app) {
+                return new MicroCMS\DAO\UserDAO($app['db']);
+            },
+        ),
+    ),
+));
 
 // Register services.
 $app['dao.user'] = function ($app) {

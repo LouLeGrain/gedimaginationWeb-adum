@@ -2,58 +2,80 @@
 
 namespace Gedimagination\DAO;
 
-use Doctrine\DBAL\Connection;
+use Symfony\Component\Security\Core\User\UserInterface;
+use Symfony\Component\Security\Core\User\UserProviderInterface;
+use Symfony\Component\Security\Core\Exception\UsernameNotFoundException;
+use Symfony\Component\Security\Core\Exception\UnsupportedUserException;
 use Gedimagination\Domain\User;
 
-class ArticleDAO
+class UserDAO extends DAO implements UserProviderInterface
 {
-    /**
-     * Database connection
+/**
+     * Returns a user matching the supplied id.
      *
-     * @var \Doctrine\DBAL\Connection
+     * @param integer $id The user id.
+     *
+     * @return \MicroCMS\Domain\User|throws an exception if no matching user is found
      */
-    private $db;
+    public function find($id) {
+        $sql = "select * from User where id=?";
+        $row = $this->getDb()->fetchAssoc($sql, array($id));
 
-    /**
-     * Constructor
-     *
-     * @param \Doctrine\DBAL\Connection The database connection object
-     */
-    public function __construct(Connection $db) {
-        $this->db = $db;
+        if ($row)
+            return $this->buildDomainObject($row);
+        else
+            throw new \Exception("No user matching id " . $id);
     }
 
     /**
-     * Return a list of all users
-     *
-     * @return array A list of all users.
+     * {@inheritDoc}
      */
-    public function findAll() {
-        $sql = "select * from users";
-        $result = $this->db->fetchAll($sql);
-        
-        // Convert query result to an array of domain objects
-        $users = array();
-        foreach ($result as $row) {
-            $userId = $row['id'];
-            $articles[$userId] = $this->buildUser($row);
+    public function loadUserByUsername($username)
+    {
+        $sql = "select * from User where nom=?";
+        $row = $this->getDb()->fetchAssoc($sql, array($username));
+
+        if ($row)
+            return $this->buildDomainObject($row);
+        else
+            throw new UsernameNotFoundException(sprintf('User "%s" not found.', $username));
+    }
+
+    /**
+     * {@inheritDoc}
+     */
+    public function refreshUser(UserInterface $user)
+    {
+        $class = get_class($user);
+        if (!$this->supportsClass($class)) {
+            throw new UnsupportedUserException(sprintf('Instances of "%s" are not supported.', $class));
         }
-        return $articles;
+        return $this->loadUserByUsername($user->getUsername());
     }
 
     /**
-     * Creates an User object based on a DB row.
+     * {@inheritDoc}
+     */
+    public function supportsClass($class)
+    {
+        return 'Gedimagination\Domain\User' === $class;
+    }
+
+    /**
+     * Creates a User object based on a DB row.
      *
      * @param array $row The DB row containing User data.
      * @return \Gedimagination\Domain\User
      */
-    private function buildUser(array $row) {
+    protected function buildDomainObject(array $row) {
         $user = new User();
         $user->setId($row['id']);
-        $user->setEmail($row['email']);
-        $user->setPrenom($row['prenom']);
-        $user->setNom($row['nom']);
+        $user->setEmail($row['email'])
+        $user->setPassword($row['pwd']);
+        $user->setSalt($row['salt']);
+        $user->setUsername($row['nom']);
         $user->setUrlImgParticipation($row['urlImgParticipation']);
+        $user->setRole($row['role']);
         return $user;
     }
 }
