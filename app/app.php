@@ -21,12 +21,15 @@ $app->register(new Silex\Provider\SecurityServiceProvider(), array(
             'pattern' => '^/',
             'anonymous' => true,
             'logout' => true,
-            'form' => array('login_path' => '/login', 'check_path' => '/login_check'),
+            'form' => array('login_path' => '/connexion', 'check_path' => '/login_check'),
             'users' => function () use ($app) {
                 return new Gedimagination\DAO\UserDAO($app['db']);
             },
         ),
     ),
+));
+$app->register(new Silex\Provider\MonologServiceProvider(), array(
+    'monolog.logfile' => __DIR__.'/var/logs/log.log',
 ));
 
 // Register services.

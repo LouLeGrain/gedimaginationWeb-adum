@@ -2,7 +2,9 @@
 
 namespace Gedimagination\Domain;
 
-class User 
+use Symfony\Component\Security\Core\User\UserInterface;
+
+class User implements UserInterface
 {
     /**
      * User id.
@@ -31,13 +33,6 @@ class User
      * @var string
      */
     private $salt;
-
-    /**
-     * User prenom.
-     *
-     * @var string
-     */
-    private $prenom;
 
     /**
      * User nom.
@@ -73,99 +68,8 @@ class User
     public function getEmail() {
         return $this->email;
     }
-
+    
     public function setEmail($email) {
-        $this->email = $email;
-        return $this;
-    }
-
-    public function getPrenom() {
-        return $this->prenom;
-    }
-
-    public function setPrenom($prenom) {
-        $this->prenom = $prenom;
-        return $this;
-    }
-
-    public function getNom() {
-        return $this->nom;
-    }
-
-    public function setNom($nom) {
-        $this->nom = $nom;
-        return $this;
-    }
-
-    public function getUrlImgParticipation() {
-        return $this->urlImgParticipation;
-    }
-
-    public function setUrlImgParticipation($urlImgParticipation) {
-        $this->urlImgParticipation = $urlImgParticipation;
-        return $this;
-    }
-
-    <?php
-
-namespace MicroCMS\Domain;
-
-use Symfony\Component\Security\Core\User\UserInterface;
-
-class User implements UserInterface
-{
-    /**
-     * User id.
-     *
-     * @var integer
-     */
-    private $id;
-
-    /**
-     * User name.
-     *
-     * @var string
-     */
-    private $username;
-
-    /**
-     * User password.
-     *
-     * @var string
-     */
-    private $password;
-
-    /**
-     * Salt that was originally used to encode the password.
-     *
-     * @var string
-     */
-    private $salt;
-
-    /**
-     * Role.
-     * Values : ROLE_USER or ROLE_ADMIN.
-     *
-     * @var string
-     */
-    private $role;
-
-    public function getId() {
-        return $this->id;
-    }
-
-    public function setId($id) {
-        $this->id = $id;
-        return $this;
-    }
-
-    public function getEmail()
-    {
-        return $this->email;
-    }
-
-    public function setEmail($email)
-    {
         $this->email = $email;
         return $this;
     }
@@ -178,7 +82,7 @@ class User implements UserInterface
         $this->password = $password;
         return $this;
     }
-
+    
     public function getSalt()
     {
         return $this->salt;
@@ -189,16 +93,23 @@ class User implements UserInterface
         $this->salt = $salt;
         return $this;
     }
+    
 
-    /**
-     * @inheritDoc
-     */
-    public function getUsername() {
-        return $this->username;
+    public function getNom() {
+        return $this->nom;
     }
 
-    public function setUsername($username) {
-        $this->username = $username;
+    public function setNom($nom) {
+        $this->nom = $nom;
+        return $this;
+    }
+    
+    public function getUrlImgParticipation() {
+        return $this->urlImgParticipation;
+    }
+
+    public function setUrlImgParticipation($urlImgParticipation) {
+        $this->urlImgParticipation = $urlImgParticipation;
         return $this;
     }
 
@@ -226,5 +137,5 @@ class User implements UserInterface
     public function eraseCredentials() {
         // Nothing to do here
     }
-}
+
 }

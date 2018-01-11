@@ -7,6 +7,7 @@ use Symfony\Component\Security\Core\User\UserProviderInterface;
 use Symfony\Component\Security\Core\Exception\UsernameNotFoundException;
 use Symfony\Component\Security\Core\Exception\UnsupportedUserException;
 use Gedimagination\Domain\User;
+use Doctrine\DBAL\Connection;
 
 class UserDAO extends DAO implements UserProviderInterface
 {
@@ -73,7 +74,7 @@ class UserDAO extends DAO implements UserProviderInterface
         $user->setEmail($row['email']);
         $user->setPassword($row['pwd']);
         $user->setSalt($row['salt']);
-        $user->setUsername($row['nom']);
+        $user->setNom($row['nom']);
         $user->setUrlImgParticipation($row['urlImgParticipation']);
         $user->setRole($row['role']);
         return $user;
