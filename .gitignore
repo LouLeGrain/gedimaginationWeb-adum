@@ -1,10 +1,5 @@
-manifest/cache/
-manifest/logs/
-manifest/tmp/
-symphony/
-workspace/uploads/
-install-log.txt
-var/logs
+web/lib
 vendor/
+views/cached
 
-\.DS_Store
+.DS_Store
