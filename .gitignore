@@ -4,7 +4,7 @@ manifest/tmp/
 symphony/
 workspace/uploads/
 install-log.txt
-
+var/logs
 vendor/
 
 \.DS_Store
