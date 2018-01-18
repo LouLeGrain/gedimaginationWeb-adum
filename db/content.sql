@@ -1,1 +1,0 @@
-// Script dinsertion de données 

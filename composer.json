@@ -1,16 +1,6 @@
 {
     "require": {
-        "silex/silex": "~2.0",
-        "doctrine/dbal": "~2.5",
-        "twig/twig": "~1.28",
-        "symfony/twig-bridge": "~2.8|3.0.*",
-        "symfony/asset": "~2.8|3.0.*",
-        "symfony/security": "~2.8|3.0.*",
-        "monolog/monolog": "^1.23"
-    },
-    "autoload": {
-        "psr-4": {
-            "Gedimagination\\": "src"
-        }
+        "klein/klein": "^2.1",
+        "twig/twig": "^2.0"
     }
 }
