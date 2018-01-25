@@ -1,5 +1,5 @@
 web/lib
 vendor/
 views/cached
-
+app/config.php
 .DS_Store
