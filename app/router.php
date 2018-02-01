@@ -1,7 +1,5 @@
 <?php
-session_start();
-
-$loader = require_once '../vendor/autoload.php';
+require_once '../vendor/autoload.php';
 $klein = new \Klein\Klein();
 require 'helpers.php';
 
@@ -31,34 +29,39 @@ $klein->respond('GET', '/connexion', function ($request, $response, $service, $a
     echo $app->twig->render('login.html.twig');
 });
 
+// Login POST'd
+$klein->respond('POST', '/connexion', function ($request, $response, $service) {
+    require '../src/User.php';
+    $user = User::findByEmail($request->param('login'));
+    if (null !== $user) {
+        //récup valeurs entrées
+        $rawPasswd = $_POST["mdp"];
+        $login = $_POST["login"];
+
+        //on va chercher le mdp crypté correspondant a l'email
+        $query = $app->db->prepare("Select * from User where email='" . $login . "';");
+        $query->execute();
+        $results = $query->fetch();
+
+        //on crypte le mdp entré, salage avec l'id
+        $password = sha1($results["id"] . $rawPasswd);
+
+        if ($password !== $user->password) {
+            throw new InvalidPasswordException();
+        } else {
+            // Set our current user to the newly logged in user's ID
+            $service->startSession();
+            $_SESSION['current_user'] = $user->id;
+
+            // Redirect to our logged-in home page
+            $response->redirect('/tableaudebord');
+        }
+    }
+});
+
 $klein->respond(array('POST', 'GET'), '/tableaudebord', function ($request, $response, $service, $app) {
     if ($request->server()['HTTP_REFERER'] == "http://gedimagination/connexion") {
-        try {
-            //récup valeurs entrées
-            $rawPasswd = $_POST["mdp"];
-            //instanciation tableau avec login & mdp
-            $loginInputs[] = $_POST["login"];
-
-            //on va chercher le mdp crypté correspondant a l'email
-            $query = $app->db->prepare("Select * from User where email='" . $loginInputs[0] . "';");
-            $query->execute();
-            $results = $query->fetch();
-
-            //on crypte le mdp entré, salage avec l'id
-            $password = sha1($results["id"] . $rawPasswd);
-            $loginInputs[] = $password;
-
-            //on compare le mdp crypté de la bdd à celui entré
-            if ($results["mdp"] == $loginInputs[1]) {
-                $app->twig->addGlobal('logged', true);
-                //TODO: vérifier l'utilisation des globales twig (pas persistentes ?) / switch sur $_Session
-            } else {
-                $app->twig->addGlobal('logged', false);
-            }
-        } catch (PDOException $e) {
-            echo "Erreur: " . $e;
-        }
-        echo $app->twig->render('dashboard.html.twig', array('user' => $results));
+        echo $app->twig->render('dashboard.html.twig', array('user' => User::findById($_SESSION['current_user'])));
     } else {
         echo $app->twig->render('dashboard.html.twig');
     }

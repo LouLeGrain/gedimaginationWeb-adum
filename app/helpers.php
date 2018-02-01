@@ -1,1 +1,5 @@
 <?php
+function findByMail($email)
+{
+
+}
