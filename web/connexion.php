@@ -1,16 +1,13 @@
-{% extends 'layout.html.twig' %}
-
-{% block title %}Authentification{% endblock %}
-
-{% block content %}
-<h2 class="text-center">{{ block('title') }}</h2>
-{% if error %}
-<div class="alert alert-danger">
-    <strong>Login failed!</strong> {{ error }}
-</div>
-{% endif %}
+<?php
+session_start();
+include 'header.php';
+require 'helpers.php';
+displayInfos();
+?>
+        <div id="content"><h2 class="text-center">Authentification</h2>
+        <br/>
 <div class="well">
-    <form class="form-signin form-horizontal" id="formLogin" role="form" action="connexion" method="post">
+    <form class="form-signin form-horizontal" id="formLogin" role="form" action="connexionConf.php" method="post">
         <div class="form-group">
             <div class="col-sm-6 col-sm-offset-3 col-md-4 col-md-offset-4">
             <input type="text" name="login" class="form-control" placeholder="Entrez votre email" required autofocus>
@@ -28,4 +25,5 @@
         </div>
     </form>
 </div>
-{% endblock %}
+</div>
+<?php include 'footer.php';?>
