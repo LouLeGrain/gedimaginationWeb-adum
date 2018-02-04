@@ -12,3 +12,8 @@ footer {
 .voffset {
     padding-top: 10px;
 }
+
+#maParticipation,
+.participation {
+    width: 100%;
+}

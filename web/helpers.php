@@ -157,13 +157,13 @@ function displayInfos()
 
 function displayParticipation()
 {
-    if (isset($_SESSION['auth']['urlImageParticipation']['url'])) {
-        $url = $_SESSION['auth']['urlImageParticipation']['url'];
-        echo "<img src='$url' alt='Ma participation au concours (session)'/>";
+    if (isset($_SESSION['auth']['urlImageParticipation'])) {
+        $url = $_SESSION['auth']['urlImageParticipation'];
+        echo "<img src='$url' id='maParticipation' alt='Ma participation au concours (session)'/>";
     } elseif (!is_null($_SESSION['auth']['idImageParticipation'])) {
         $url = getImgUrl();
         setImgUrlInSession($url);
-        echo "<img src='$url' alt='Ma participation au concours (cherchée)'/>";
+        echo "<img src='$url' id='maParticipation' alt='Ma participation au concours (cherchée)'/>";
     } else {
         echo "<div class='alert alert-info alert-dismissable text-center'>
         <a href='#' class='close' data-dismiss='alert' aria-label='close'>&times;</a>
@@ -184,4 +184,27 @@ function getImgUrl()
     $req->execute();
     $res = $req->fetch();
     return (string) $res[0];
+}
+
+function displayWinners()
+{
+    $gagnants = getTopThree();
+    foreach ($gagnants as $position => $gagnant) {
+        $nom = $gagnant['nom'];
+        $votes = $gagnant['votes'];
+        $url = $gagnant['url'];
+        $position++;
+        echo "<h3><b>n°$position : $nom</b> avec <b>$votes</b> votes</h3><br/><img src='$url' width='100%' alt='participation de $nom'/>";
+    }
+}
+
+function getTopThree()
+{
+    $pdo = getDb();
+    $req = $pdo->prepare("SELECT Utilisateur.nom, url, votes
+                        from ImageParticipation JOIN Utilisateur
+                        ON ImageParticipation.id = Utilisateur.idImageParticipation
+                        ORDER by votes DESC LIMIT 3");
+    $req->execute();
+    return $req->fetchAll();
 }
