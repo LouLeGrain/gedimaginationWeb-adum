@@ -8,8 +8,8 @@
     <meta http-equiv="X-UA-Compatible" content="IE=edge">
     <meta name="viewport" content="width=device-width, initial-scale=1">
     <link href="gedimagination.css" rel="stylesheet">
-    <script src="gedimagination.js"></script>
     <script src="lib/jquery/jquery.min.js"></script>
+    <script src="gedimagination.js"></script>
     <link href="lib/bootstrap/css/bootstrap.min.css" rel="stylesheet">
     <script src="lib/bootstrap/js/bootstrap.min.js"></script>
     <title>Gedimagination</title>
