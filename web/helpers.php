@@ -1,16 +1,10 @@
 <?php
 // Faire bien attention au contexte d'appel de chaque fonction (gestion d'exceptions quasi inexistante)
+require 'db.php';
 
 function getDb()
 {
-    try {
-        $bdd = new PDO('mysql:host=localhost;dbname=gedimagination;', "gedimaginadmin", "jaipasdimagination");
-        $bdd->setAttribute(PDO::ATTR_ERRMODE, PDO::ERRMODE_EXCEPTION);
-    } catch (Exception $e) {
-        $bdd = false;
-        die('Erreur : ' . $e->getMessage());
-    }
-    return $bdd;
+    return Database::getDB();
 }
 
 function insertUser()
@@ -57,9 +51,6 @@ function deconnect()
         session_start();
     }
     unset($_SESSION['auth']);
-    $_SESSION['infos']['success'] = 'Vous êtes maintenant déconnecté';
-    header('Location: connexion.php');
-    exit();
 }
 
 function loggedOnly()
@@ -88,12 +79,12 @@ function uploadImg()
 //Début des vérifications de sécurité...
     if (!in_array($extension, $extensions)) //Si l'extension n'est pas dans le tableau
     {
-        $_SESSION['infos']['danger'] = 'Vous devez uploader un fichier de type png, gif, jpg, jpeg, txt ou doc...';
+        $_SESSION['infos']['danger'] = 'Vous devez uploader un fichier de type png, gif, jpg, ou jpeg';
         header('Location: tableaudebord.php');
         exit();
     }
     if ($taille > $taille_maxi) {
-        $_SESSION['infos']['danger'] = 'Le fichier est trop gros...';
+        $_SESSION['infos']['danger'] = 'Le fichier est trop gros... La taille maximale est de 3Mo';
         header('Location: tableaudebord.php');
         exit();
     }
@@ -115,7 +106,7 @@ function uploadImg()
         // On enregistre l'url de l'image dans la base de données
         $req = $pdo->prepare("INSERT INTO ImageParticipation SET url = '$url'");
         $req->execute();
-        $img_id = $pdo->lastInsertId(); //TODO: Insertion url image et clé étrangère (pb lastinsertid)
+        $img_id = $pdo->lastInsertId();
         // On mets a jour l'id de l'image du participant dans la variable de session
         $_SESSION['auth']['idImageParticipation'] = $img_id;
         // Puis dans la base de données
@@ -150,7 +141,7 @@ function displayInfos()
                     <a href='#' class='close' data-dismiss='alert' aria-label='close'>&times;</a>
                     <strong><span class='glyphicon glyphicon-info-sign'></span> Info :</strong> $content</div>";
                     break;
-                case "del":
+                case "deleted":
                     echo "<div class='alert alert-info alert-dismissable text-center'>
                     <a href='#' class='close' data-dismiss='alert' aria-label='close'>&times;</a>
                     <strong><span class='glyphicon glyphicon-info-sign'></span> Info :</strong> $content</div>";
@@ -198,35 +189,58 @@ function displayWinners()
     $gagnants = getTopThree();
     foreach ($gagnants as $position => $gagnant) {
         $nom = $gagnant['nom'];
-        $votes = $gagnant['votes'];
+        $note = $gagnant['note'];
         $url = $gagnant['url'];
         $position++;
-        echo "<h3><b>n°$position : $nom</b> avec <b>$votes</b> votes</h3><br/><img src='$url' width='100%' alt='participation de $nom'/>";
+        echo "<h3><b>N°$position : $nom</b> avec une note de <b>$note</b> sur 5</h3><br/><img src='$url' width='100%' alt='participation de $nom'/>";
     }
 }
 
 function getTopThree()
 {
     $pdo = getDb();
-    $req = $pdo->prepare("SELECT Utilisateur.nom, url, votes
+    $req = $pdo->prepare("SELECT Utilisateur.nom, url, note
                         from ImageParticipation JOIN Utilisateur
                         ON ImageParticipation.id = Utilisateur.idImageParticipation
-                        ORDER by votes DESC LIMIT 3");
+                        ORDER by note DESC LIMIT 3");
     $req->execute();
     return $req->fetchAll();
 }
 
 function modifierUser()
 {
+    if ($_POST['nom'] != $_SESSION['auth']['nom']) {
+        modifierNom($_POST['nom']);
+    }
+
+    if ($_POST['email'] != $_SESSION['auth']['email']) {
+        modifierEmail($_POST['email']);
+    }
+
+    if (!isset($_SESSION['infos']['success'])) {
+        $_SESSION['infos']['success'] = 'Rien a modifier !';
+    }
+
+    header('Location: tableaudebord.php');
+    exit();
 
 }
-function modifierNom($id)
-{
 
+function modifierNom($nom)
+{
+    $pdo = getDb();
+    $req = $pdo->prepare("UPDATE `Utilisateur` SET `nom` = '$nom' WHERE `email` ='" . $_SESSION['auth']['email'] . "';");
+    $req->execute();
+    $_SESSION['infos']['success'] = 'Modification de données utilisateur effectuée (nom)';
+    $_SESSION['auth']['nom'] = $_POST['nom'];
 }
-function modifierEmail($id)
+function modifierEmail($email)
 {
-
+    $pdo = getDb();
+    $req = $pdo->prepare("UPDATE `Utilisateur` SET `email` = '$email' WHERE `email` ='" . $_SESSION['auth']['email'] . "';");
+    $req->execute();
+    $_SESSION['infos']['success'] = 'Modification de données utilisateur effectuée (email)';
+    $_SESSION['auth']['email'] = $_POST['email'];
 }
 function supprimerUser()
 {
@@ -235,5 +249,7 @@ function supprimerUser()
     $req = $pdo->prepare("DELETE from Utilisateur where id = $id");
     $req->execute();
     deconnect();
-    $_SESSION['infos']['deleted'] = 'Suppression effectuée : votre compte à été supprimé';
+    header('Location: index.php');
+    $_SESSION['infos']['deleted'] = 'Votre compte à été supprimé';
+    exit();
 }
