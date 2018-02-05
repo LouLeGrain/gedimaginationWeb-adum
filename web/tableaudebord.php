@@ -30,7 +30,7 @@ displayInfos();
             </div>
             <div class="col-md-6 col-lg-6">
                 <h2>Informations</h2><hr/>
-                <form class="form-signin form-horizontal" id="formLogin" role="form" action="inscriptionConf.php" method="post">
+                <form class="form-signin form-horizontal" id="formLogin" role="form" action="supprConf.php" method="post">
                     <div class="form-group">
                         <input type="text" name="login" class="form-control" placeholder="Email" required value="<?echo $_SESSION['auth']['email']; ?>"/>
                     </div>
@@ -42,7 +42,7 @@ displayInfos();
                             <button class="btn btn-default btn-danger disabled">Réinitialiser mon mot de passe</button>
                     </div>
                     <div class="form-group voffset">
-                        <button class="btn btn-default btn-danger disabled">Supprimer mon compte</button>
+                        <button class="btn btn-default btn-danger">Supprimer mon compte</button>
                     </div>
                 </form>
             </div>

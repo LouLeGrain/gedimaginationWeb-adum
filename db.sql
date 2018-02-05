@@ -23,28 +23,6 @@ GRANT ALL PRIVILEGES ON `gedimagination`.* TO 'gedimaginadmin'@'%' WITH GRANT OP
 -- --------------------------------------------------------
 
 --
--- Structure de la table `ImageParticipation`
---
-
-DROP TABLE IF EXISTS `ImageParticipation`;
-CREATE TABLE IF NOT EXISTS `ImageParticipation` (
-  `id` int(11) NOT NULL AUTO_INCREMENT,
-  `url` varchar(200) NOT NULL,
-  `votes` int(11) DEFAULT NULL,
-  PRIMARY KEY (`id`)
-) ENGINE=InnoDB AUTO_INCREMENT=18 DEFAULT CHARSET=utf8;
-
---
--- Déchargement des données de la table `ImageParticipation`
---
-
-INSERT INTO `ImageParticipation` (`id`, `url`, `votes`) VALUES(15, 'participations/mabornedarcade.jpg', 10);
-INSERT INTO `ImageParticipation` (`id`, `url`, `votes`) VALUES(16, 'participations/monfirepit.jpg', 30);
-INSERT INTO `ImageParticipation` (`id`, `url`, `votes`) VALUES(17, 'participations/macuisine.jpg', 15);
-
--- --------------------------------------------------------
-
---
 -- Structure de la table `Utilisateur`
 --
 
@@ -70,12 +48,30 @@ INSERT INTO `Utilisateur` (`id`, `email`, `mdp`, `nom`, `idImageParticipation`, 
 INSERT INTO `Utilisateur` (`id`, `email`, `mdp`, `nom`, `idImageParticipation`, `role`) VALUES(4, 'tim@local.dev', '$2y$10$ylZyqNI1ssD/JH1wiPV.neB7USYoW1l0YC0kVmocrQ/EW3UqZFOFS', 'Timothée Comte', 17, 'user');
 
 --
--- Contraintes pour les tables déchargées
+-- Structure de la table `ImageParticipation`
 --
+
+DROP TABLE IF EXISTS `ImageParticipation`;
+CREATE TABLE IF NOT EXISTS `ImageParticipation` (
+  `id` int(11) NOT NULL AUTO_INCREMENT,
+  `url` varchar(200) NOT NULL,
+  `votes` int(11) DEFAULT NULL,
+  PRIMARY KEY (`id`)
+) ENGINE=InnoDB AUTO_INCREMENT=18 DEFAULT CHARSET=utf8;
+
+--
+-- Déchargement des données de la table `ImageParticipation`
+--
+
+INSERT INTO `ImageParticipation` (`id`, `url`, `votes`) VALUES(15, 'participations/mabornedarcade.jpg', 10);
+INSERT INTO `ImageParticipation` (`id`, `url`, `votes`) VALUES(16, 'participations/monfirepit.jpg', 30);
+INSERT INTO `ImageParticipation` (`id`, `url`, `votes`) VALUES(17, 'participations/macuisine.jpg', 15);
+
+-- --------------------------------------------------------
 
 --
 -- Contraintes pour la table `Utilisateur`
 --
 ALTER TABLE `Utilisateur`
-  ADD CONSTRAINT `image` FOREIGN KEY (`idImageParticipation`) REFERENCES `ImageParticipation` (`id`);
+  ADD CONSTRAINT `image` FOREIGN KEY (`idImageParticipation`) REFERENCES `ImageParticipation` (`id`) ON DELETE CASCADE;
 

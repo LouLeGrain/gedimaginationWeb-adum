@@ -53,7 +53,9 @@ function connect()
 
 function deconnect()
 {
-    session_start();
+    if (session_status() == PHP_SESSION_NONE) {
+        session_start();
+    }
     unset($_SESSION['auth']);
     $_SESSION['infos']['success'] = 'Vous êtes maintenant déconnecté';
     header('Location: connexion.php');
@@ -148,6 +150,11 @@ function displayInfos()
                     <a href='#' class='close' data-dismiss='alert' aria-label='close'>&times;</a>
                     <strong><span class='glyphicon glyphicon-info-sign'></span> Info :</strong> $content</div>";
                     break;
+                case "del":
+                    echo "<div class='alert alert-info alert-dismissable text-center'>
+                    <a href='#' class='close' data-dismiss='alert' aria-label='close'>&times;</a>
+                    <strong><span class='glyphicon glyphicon-info-sign'></span> Info :</strong> $content</div>";
+                    break;
             }
             array_shift($_SESSION['infos']);
         }
@@ -207,4 +214,26 @@ function getTopThree()
                         ORDER by votes DESC LIMIT 3");
     $req->execute();
     return $req->fetchAll();
+}
+
+function modifierUser()
+{
+
+}
+function modifierNom($id)
+{
+
+}
+function modifierEmail($id)
+{
+
+}
+function supprimerUser()
+{
+    $pdo = getDb();
+    $id = $_SESSION['auth']['id'];
+    $req = $pdo->prepare("DELETE from Utilisateur where id = $id");
+    $req->execute();
+    deconnect();
+    $_SESSION['infos']['deleted'] = 'Suppression effectuée : votre compte à été supprimé';
 }
