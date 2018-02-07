@@ -2,8 +2,8 @@
 class Database
 {
     private static $datasource = 'mysql:host=localhost; dbname=gedimagination';
-    private static $username = 'gedimaginadmin';
-    private static $password = 'jaipasdimagination';
+    private static $username = 'root';
+    private static $password = 'root';
     private static $db;
 
     public static function getDB()

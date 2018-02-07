@@ -186,6 +186,7 @@ function getImgUrl()
 
 function displayWinners()
 {
+    // du 03/03/2018 au 31/03/2018
     $gagnants = getTopThree();
     foreach ($gagnants as $position => $gagnant) {
         $nom = $gagnant['nom'];
@@ -199,10 +200,7 @@ function displayWinners()
 function getTopThree()
 {
     $pdo = getDb();
-    $req = $pdo->prepare("SELECT Utilisateur.nom, url, note
-                        from ImageParticipation JOIN Utilisateur
-                        ON ImageParticipation.id = Utilisateur.idImageParticipation
-                        ORDER by note DESC LIMIT 3");
+    $req = $pdo->prepare("SELECT Utilisateur.nom, url, note from ImageParticipation JOIN Utilisateur ON ImageParticipation.id = Utilisateur.idImageParticipation ORDER by note DESC LIMIT 3");
     $req->execute();
     return $req->fetchAll();
 }
