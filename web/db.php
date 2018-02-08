@@ -3,7 +3,7 @@ class Database
 {
     private static $datasource = 'mysql:host=localhost; dbname=gedimagination';
     private static $username = 'root';
-    private static $password = 'root';
+    private static $password = 'System2017';
     private static $db;
 
     public static function getDB()
