@@ -1,4 +1,3 @@
 <?php
-session_start();
-include 'helpers.php';
-modifierUser();
+require '../src/autoload.php';
+User::modifier();

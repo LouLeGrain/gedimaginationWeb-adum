@@ -1,4 +1,3 @@
 <?php
-session_start();
-include 'helpers.php';
-insertUser();
+require '../src/autoload.php';
+Database::insertUser();

@@ -1,13 +1,8 @@
 <?php
-session_start();
-require 'helpers.php';
-loggedOnly();
-if (isset($_SESSION['auth'])) {
-    include 'headerLogged.php';
-} else {
-    include 'header.php';
-}
-displayInfos();
+require '../src/autoload.php';
+Display::loggedOnly();
+Display::header();
+Display::infos();
 ?>
         <div>
             <h1>Tableau de Bord</h1>
@@ -50,7 +45,7 @@ displayInfos();
             </div>
             <div class="col-md-12 col-lg-12 jumbotron">
                 <h2>Ma participation</h2>
-                <?php displayParticipation();?>
+                <?php Display::participation();?>
             </div>
             </div>
         </div>

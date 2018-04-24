@@ -1,4 +1,4 @@
 <?php
-session_start();
-include 'helpers.php';
-uploadImg();
+require '../src/autoload.php';
+
+Helpers::uploadImg();

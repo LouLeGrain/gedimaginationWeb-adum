@@ -24,10 +24,12 @@
                         <span class="icon-bar"></span>
                         <span class="icon-bar"></span>
                     </button>
-                    <a class="navbar-brand" href="/">Gedima'Gination</a>
+                    <a class="navbar-brand" href="index.php">Gedima'Gination</a>
                 </div>
                 <div class="collapse navbar-collapse" id="navbar-collapse-target">
                     <ul class="nav navbar-nav navbar-right">
+                                                    <a id="btnVoter" href="vote.php"> <button type="submit" class="btn btn-default btn-primary">Voter !</button></a>
+
                             <li class="dropdown">
                             <a href="#" class="dropdown-toggle" data-toggle="dropdown">
                                 <span class="glyphicon glyphicon-user"></span> Bienvenue <?echo $_SESSION['auth']['nom']; ?><b class="caret"></b></a>

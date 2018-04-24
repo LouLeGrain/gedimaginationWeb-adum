@@ -1,8 +1,7 @@
 <?php
-session_start();
+require '../src/autoload.php';
 include 'header.php';
-require 'helpers.php';
-displayInfos();
+Display::infos();
 ?>
         <div id="content"><h2 class="text-center">Authentification</h2>
         <br/>

@@ -1,5 +1,5 @@
 <?php
-session_start();
+require '../src/autoload.php';
 include 'header.php';?>
         <div id="content"><h2 class="text-center">Inscription</h2>
 <div class="well">

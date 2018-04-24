@@ -1,17 +1,12 @@
 <?php
-session_start();
-require 'helpers.php';
-displayInfos();
-if (isset($_SESSION['auth'])) {
-    include 'headerLogged.php';
-} else {
-    include 'header.php';
-}
+require '../src/autoload.php';
+Display::infos();
+Display::header();
 ?>
         <div id="content" class="contentAccueil">
             <h1>Concours Gedima'Gination</h1>
             <p>Bienvenue sur le site du concours Gedimagination développé par Négomat suite à la collaboration des groupes <b>Gedimat</b> et <b>Interway</b></p>
-            <img src="lib/logo_gedimat.png" alt="logo gedimat" width="300px"/>
+            <div class='row text-center'><img src="lib/logo_gedimat.png" alt="logo gedimat" width="300px"/></div>
 <br/>Vous pouvez vous inscrire au concours en créant un compte dans la section "Inscription" prévue a cet effet (accessible en haut à droite)<p/>
             <h2>Règlement</h2>
             <p>
@@ -24,7 +19,7 @@ if (isset($_SESSION['auth'])) {
             <h2></h2>
             <div class="col-md-12 col-lg-12 jumbotron">
                 <h2>Gagnants du concours</h2>
-                <?php displayWinners();?>
+                <?php Display::gagnants();?>
             </div>
         </div>
 <?php include 'footer.php';?>

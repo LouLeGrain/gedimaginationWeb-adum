@@ -1,6 +1,5 @@
 <?php
-session_start();
-include 'helpers.php';
-supprimerUser();
+require '../src/autoload.php';
+Database::supprimerUser();
 header('Location: index.php');
 exit();

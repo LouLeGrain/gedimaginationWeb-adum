@@ -1,4 +1,3 @@
 <?php
-session_start();
-include 'helpers.php';
-connect();
+require '../src/autoload.php';
+Database::connect();
