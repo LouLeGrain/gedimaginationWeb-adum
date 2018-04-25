@@ -1,6 +1,34 @@
 <?
 class User
 {
+
+    public static function create($email = null, $mdp = null, $nom = null, $role = "voter")
+    {
+        if (isset($_POST['login']) && $email == null) {
+            $email = $_POST['login'];
+        }
+        if (isset($_POST['mdp']) && $mdp == null) {
+            $mdp = password_hash($_POST['mdp'], PASSWORD_BCRYPT);
+            $role = "user";
+        }
+        if (isset($_POST['nom']) && $nom == null) {
+            $nom = $_POST['nom'];
+        }
+        $pdo = Database::getPDO();
+        // On enregistre les informations dans la base de données
+        $req = $pdo->prepare("INSERT INTO Utilisateur SET email = ?, mdp = ?, nom = ?, role = ?");
+        $inscrit = $req->execute([$email, $mdp, $nom, $role]);
+        if ($inscrit) {
+            $_SESSION['infos']['success'] = 'Vous avez bien été inscrit.';
+            $_SESSION['infos']['info'] = 'Vous devez être client de Negomat pour participer, la vérification s\'effectue à la publication de votre photo.';
+            header('Location: connexion.php');
+        } else {
+            $_SESSION['infos']['warning'] = 'Lors de votre inscription en base de donnée';
+            header('Location: inscription.php');
+        }
+        exit();
+    }
+
 /**
  * Récupère le nombre de G'aime selon l'id de l'image passée en paramètre
  *  En profite pour mettre à jour le nombre de G'aime dans la base
@@ -12,14 +40,17 @@ class User
         $pdo = Database::getPDO();
         $req = $pdo->prepare("SELECT note FROM Vote WHERE idImage = $idImage;");
         $req->execute();
-        $votes = $req->fetch();
+        $votes = $req->fetchAll();
         if ($votes) {
-            $nbGaime = array_sum($votes);
+            $nbGaime = 0;
+            foreach ($votes as $vote) {
+                $nbGaime += $vote['note'];
+            }
             $reqbis = $pdo->prepare("UPDATE ImageParticipation SET nbGaime = $nbGaime WHERE id = $idImage");
             $reqbis->execute();
             return $nbGaime;
         } else {
-            return false;
+            return 0;
         }
     }
 
@@ -37,6 +68,24 @@ class User
     {
         $pdo = Database::getPDO();
         $req = $pdo->prepare("SELECT * FROM Utilisateur WHERE email ='$email';");
+        $req->execute();
+        $user = $req->fetch();
+        if ($user === false) {
+            return false;
+        } else {
+            return true;
+        }
+    }
+
+    public static function hasVoted($idVotant = null)
+    {
+        if ($idVotant == null) {
+            if (isset($_SESSION['auth']['id'])) {
+                $idVotant = $_SESSION['auth']['id'];
+            }
+        }
+        $pdo = Database::getPDO();
+        $req = $pdo->prepare("SELECT * FROM Vote WHERE idVotant=$idVotant;");
         $req->execute();
         $user = $req->fetch();
         if ($user === false) {

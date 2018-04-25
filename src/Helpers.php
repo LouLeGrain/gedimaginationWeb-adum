@@ -77,15 +77,15 @@ class Helpers
         $pdo = Database::getPDO();
         if (isset($_POST['mailSaisi'])) {
             $mailSaisi = $_POST['mailSaisi'];
-            if (!isAlreadyRegistered($mailSaisi)) {
-                if (isset($_SESSION['auth'])) {
-                    $idVotant = $_SESSION['auth']['id'];
-                } else { //si le votant à pas de compte on le créé
-                    // TODO: utiliser la méthode createUser
-                    $req = $pdo->prepare("INSERT INTO Utilisateur SET email = ?, role = 'voter'");
-                    $req->execute([$mailSaisi]);
-                    $idVotant = $pdo->lastInsertId();
-                }
+            if (isset($_SESSION['auth'])) {
+                $idVotant = $_SESSION['auth']['id'];
+            } else { //si le votant à pas de compte on le créé
+                $req = $pdo->prepare("INSERT INTO Utilisateur SET email = ?, role = 'voter'");
+                $req->execute([$mailSaisi]);
+                $idVotant = $pdo->lastInsertId();
+            }
+
+            if (!User::hasVoted($idVotant)) {
 
                 // Préparation des requetes
                 $idImageVotee1 = $_POST['idImgVote1'];
@@ -98,14 +98,13 @@ class Helpers
                 $noteImageVotee3 = $_POST['vote3'];
 
                 $params = [$mailSaisi];
-                $pdo = Database::getPDO();
 
                 $req1 = $pdo->prepare("INSERT INTO Vote (idImage, idVotant, note) VALUES('$idImageVotee1', '$idVotant', '$noteImageVotee1')");
-                $req1bis = $pdo->prepare("UPDATE ImageParticipation SET nbVotes = nbVotes+1 WHERE id = $idImageVotee1");
+                $req1bis = $pdo->prepare("UPDATE ImageParticipation SET nbGaime = nbGaime+$noteImageVotee1 WHERE id = $idImageVotee1");
                 $req2 = $pdo->prepare("INSERT INTO Vote (idImage, idVotant, note) VALUES('$idImageVotee2', '$idVotant', '$noteImageVotee2')");
-                $req2bis = $pdo->prepare("UPDATE ImageParticipation SET nbVotes = nbVotes+1 WHERE id = $idImageVotee2");
+                $req2bis = $pdo->prepare("UPDATE ImageParticipation SET nbGaime = nbGaime+$noteImageVotee2 WHERE id = $idImageVotee2");
                 $req3 = $pdo->prepare("INSERT INTO Vote (idImage, idVotant, note) VALUES('$idImageVotee3', '$idVotant', '$noteImageVotee3')");
-                $req3bis = $pdo->prepare("UPDATE ImageParticipation SET nbVotes = nbVotes+1 WHERE id = $idImageVotee3");
+                $req3bis = $pdo->prepare("UPDATE ImageParticipation SET nbGaime = nbGaime+$noteImageVotee3 WHERE id = $idImageVotee3");
                 //je fais un tableau de requetes
                 $requetes = array($req1, $req1bis, $req2, $req2bis, $req3, $req3bis);
                 $resultats = false; //flag en cas d'échec de requête
@@ -113,16 +112,13 @@ class Helpers
                 foreach ($requetes as $requete) {
                     $resultats = $requete->execute();
                     if (!$resultats) {
-                        $_SESSION['infos']['warning'] = 'Erreur lors de l\'insertion d\'un vote dans la base de données, vous ne pouvez pas voter pour deux mêmes photos';
+                        $_SESSION['infos']['warning'] = 'Vous ne pouvez pas voter pour deux mêmes photos';
                     }
                 }
+                $_SESSION['infos']['success'] = 'Vos votes ont bien été pris en compte ! Rendez vous lors de l\'annonce des résultats !';
 
-                if ($resultats) {
-                    $_SESSION['infos']['success'] = 'Vos votes ont bien été pris en compte ! Rendez vous lors de l\'annonce des résultats !';
-                    calculerNoteImages();
-                }
             } else {
-                $_SESSION['infos']['warning'] = 'Vous avez déjà participé !';
+                $_SESSION['infos']['warning'] = 'Vous avez déjà voté !';
             }
         }
     }

@@ -78,11 +78,10 @@ class Display
     public static function participations()
     {
         $participants = Database::getParticipants();
-        foreach ($participants as $position => $participant) {
+        foreach ($participants as $participant) {
             $nom = $participant['nom'];
             $nbGaime = (!User::getNbGaime($participant['idImageParticipation'])) ? 0 : User::getNbGaime($participant['idImageParticipation']);
             $url = $participant['url'];
-            $position++;
             echo "<div class='col-md-6 col-lg-6'>
         <div class='thumbnail'>
         <img src='$url' class='media-object' alt='participation de $nom'/>
@@ -95,18 +94,26 @@ class Display
     public static function gagnants()
     {
         // du 03/03/2018 au 31/03/2018
-        $gagnants = Database::getTopThree();
-        foreach ($gagnants as $position => $gagnant) {
-            $nom = $gagnant['nom'];
-            $nbGaime = (!User::getNbGaime($gagnant['idImageParticipation'])) ? 0 : User::getNbGaime($gagnant['idImageParticipation']);
-            $url = $gagnant['url'];
-            $position++;
-            echo "<div class='col-md-6 col-lg-6'>
+        $aujourdhui = new DateTime();
+        $dateFinConcours = new DateTime("31-03-2018");
+        // $dateFinConcours = new DateTime("03/03/2019"); //test d'affichage
+        if ($dateFinConcours > $aujourdhui) {
+            echo "<p>Le concours n'est pas terminé! Rien n'est encore joué, <a href='inscription.php'>cliquez ici</a> pour vous inscrire et participer</p>";
+        } else {
+
+            $gagnants = Database::getTopThree();
+            foreach ($gagnants as $position => $gagnant) {
+                $nom = $gagnant['nom'];
+                $nbGaime = (!User::getNbGaime($gagnant['idImageParticipation'])) ? 0 : User::getNbGaime($gagnant['idImageParticipation']);
+                $url = $gagnant['url'];
+                $position++;
+                echo "<div class='col-md-4 col-lg-4'>
         <div class='thumbnail'>
         <img src='$url' class='media-object' alt='participation de $nom'/>
-        <div class='caption text-center'><h3>$nom <b>($nbGaime G'aime)</b></h3></div>
+        <div class='caption text-center'><h3>$nom <br/>(<b>$nbGaime</b> G'aime)</h3></div>
         </div>
         </div>";
+            }
         }
     }
 
@@ -115,7 +122,7 @@ class Display
         $participants = Database::getParticipants();
         foreach ($participants as $participant) {
             $nom = $participant['nom'];
-            $idImg = $participant['id'];
+            $idImg = $participant['idImageParticipation'];
             echo "<option value='$idImg'><b>$nom</b>";
         }
     }

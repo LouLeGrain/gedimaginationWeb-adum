@@ -14,21 +14,6 @@ class Database
         return self::$pdo;
     }
 
-    public static function insertUser()
-    {
-        $pdo = self::getPDO();
-        // On enregistre les informations dans la base de données
-        $req = $pdo->prepare("INSERT INTO Utilisateur SET email = ?, mdp = ?, nom = ?, role = 'user'");
-        // On ne sauvegardera pas le mot de passe en clair dans la base mais plutôt un hash
-        $password = password_hash($_POST['mdp'], PASSWORD_BCRYPT);
-        $req->execute([$_POST['login'], $password, $_POST['nom']]);
-        $user_id = $pdo->lastInsertId();
-        $_SESSION['infos']['success'] = 'Vous avez bien été inscrit.';
-        $_SESSION['infos']['info'] = 'Vous devez être client de Negomat pour participer, la vérification s\'effectue à la publication de votre photo.';
-        header('Location: connexion.php');
-        exit();
-    }
-
     public static function connect()
     {
         if (!empty($_POST) && !empty($_POST['login']) && !empty($_POST['mdp'])) {
@@ -63,7 +48,7 @@ class Database
     public static function getTopThree()
     {
         $pdo = self::getPDO();
-        $req = $pdo->prepare("SELECT Utilisateur.nom, idImageParticipation, url from ImageParticipation JOIN Utilisateur ON ImageParticipation.id = Utilisateur.idImageParticipation LIMIT 3");
+        $req = $pdo->prepare("SELECT Utilisateur.nom, idImageParticipation, url from ImageParticipation JOIN Utilisateur ON ImageParticipation.id = Utilisateur.idImageParticipation ORDER BY nbGaime DESC LIMIT 3");
         $req->execute();
         return $req->fetchAll();
     }
