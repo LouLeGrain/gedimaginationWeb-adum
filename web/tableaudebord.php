@@ -1,8 +1,8 @@
 <?php
 require '../src/autoload.php';
 Display::loggedOnly();
-Display::header();
 Display::infos();
+Display::header();
 ?>
         <div>
             <h1>Tableau de Bord</h1>
@@ -44,8 +44,11 @@ Display::infos();
                 </form>
             </div>
             <div class="col-md-12 col-lg-12 jumbotron">
-                <h2>Ma participation</h2>
-                <?php Display::participation();?>
+<?php if ($_SESSION['auth']['role'] == "admin") {
+    Display::adminPanel();
+} else {
+    Display::participation();
+}?>
             </div>
             </div>
         </div>

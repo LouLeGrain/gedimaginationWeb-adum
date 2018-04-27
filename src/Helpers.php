@@ -116,7 +116,6 @@ class Helpers
                     }
                 }
                 $_SESSION['infos']['success'] = 'Vos votes ont bien été pris en compte ! Rendez vous lors de l\'annonce des résultats !';
-
             } else {
                 $_SESSION['infos']['warning'] = 'Vous avez déjà voté !';
             }

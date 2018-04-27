@@ -1,5 +1,6 @@
 <?php
 require '../src/autoload.php';
+Helpers::processVotes();
 Display::infos();
 if (isset($_SESSION['auth'])) {
     include 'headerLogged.php';
@@ -8,7 +9,6 @@ if (isset($_SESSION['auth'])) {
     include 'header.php';
     $email = "monmail@monfournisseur.fr";
 }
-Helpers::processVotes();
 ?>
         <div>
             <h1>Votes</h1>

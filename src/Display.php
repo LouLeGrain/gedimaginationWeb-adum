@@ -52,6 +52,12 @@ class Display
                     <a href='#' class='close' data-dismiss='alert' aria-label='close'>&times;</a>
                     <strong><span class='glyphicon glyphicon-info-sign'></span> Info :</strong> $content</div>";
                         break;
+                    default:
+                        echo "<div class='alert alert-info alert-dismissable text-center'>
+                    <a href='#' class='close' data-dismiss='alert' aria-label='close'>&times;</a>
+                    <strong><span class='glyphicon glyphicon-info-sign'></span> Info :</strong> $content</div>";
+                        break;
+
                 }
                 array_shift($_SESSION['infos']);
             }
@@ -61,6 +67,7 @@ class Display
 
     public static function participation()
     {
+        echo "<h2> Ma participation </h2>";
         if (isset($_SESSION['auth']['urlImageParticipation'])) {
             $url = $_SESSION['auth']['urlImageParticipation'];
             echo "<img src='$url' id='maParticipation' alt='Ma participation au concours (session)'/>";
@@ -125,6 +132,21 @@ class Display
             $idImg = $participant['idImageParticipation'];
             echo "<option value='$idImg'><b>$nom</b>";
         }
+    }
+
+    public static function adminPanel()
+    {
+        echo "<h2>Panneau administateur</h2>";
+        $nbParticipations = Database::getNbParticipations();
+        $nbUtilisateurs = Database::getNbUtilisateurs();
+        $nbVotes = Database::getNbVotes();
+        echo "<div class='col-md-6 col-lg-6'>
+        <ul>
+            <li>Nombre d'images ajoutées : $nbParticipations</li>
+            <li>Nombre d'utilisateurs : $nbUtilisateurs</li>
+            <li>Nombre de Votes : $nbVotes</li>
+        </ul>
+        </div>";
     }
 
 }

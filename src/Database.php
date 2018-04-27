@@ -61,4 +61,31 @@ class Database
         return $req->fetchAll();
     }
 
+    public static function getNbParticipations()
+    {
+        $pdo = self::getPDO();
+        $req = $pdo->prepare("SELECT COUNT(id) from ImageParticipation;");
+        $req->execute();
+        $res = $req->fetch();
+        return $res[0];
+    }
+
+    public static function getNbUtilisateurs()
+    {
+        $pdo = self::getPDO();
+        $req = $pdo->prepare("SELECT COUNT(id) from Utilisateur;");
+        $req->execute();
+        $res = $req->fetch();
+        return $res[0];
+    }
+
+    public static function getNbVotes()
+    {
+        $pdo = self::getPDO();
+        $req = $pdo->prepare("SELECT COUNT(*) from Vote;");
+        $req->execute();
+        $res = $req->fetch();
+        return $res[0];
+    }
+
 }
