@@ -1,6 +1,7 @@
 <?php
 require '../src/autoload.php';
-include 'header.php';?>
+include 'header.php';
+Display::infos();?>
         <div id="content"><h2 class="text-center">Inscription</h2>
 <div class="well">
     <form class="form-signin form-horizontal" id="formLogin" role="form" action="inscriptionConf.php" method="post">

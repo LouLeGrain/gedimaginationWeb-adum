@@ -1,5 +1,5 @@
 <?php
 require '../src/autoload.php';
-Database::supprimerUser();
+User::supprimer();
 header('Location: index.php');
 exit();

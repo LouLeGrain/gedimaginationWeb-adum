@@ -6,6 +6,7 @@ class User
     {
         if (isset($_POST['login']) && $email == null) {
             $email = $_POST['login'];
+
         }
         if (isset($_POST['mdp']) && $mdp == null) {
             $mdp = password_hash($_POST['mdp'], PASSWORD_BCRYPT);
@@ -16,14 +17,19 @@ class User
         }
         $pdo = Database::getPDO();
         // On enregistre les informations dans la base de données
-        $req = $pdo->prepare("INSERT INTO Utilisateur SET email = ?, mdp = ?, nom = ?, role = ?");
-        $inscrit = $req->execute([$email, $mdp, $nom, $role]);
-        if ($inscrit) {
-            $_SESSION['infos']['success'] = 'Vous avez bien été inscrit.';
-            $_SESSION['infos']['info'] = 'Vous devez être client de Negomat pour participer, la vérification s\'effectue à la publication de votre photo.';
-            header('Location: connexion.php');
+        if (!User::isAlreadyRegistered($_POST['login'])) {
+            $req = $pdo->prepare("INSERT INTO Utilisateur SET email = ?, mdp = ?, nom = ?, role = ?");
+            $inscrit = $req->execute([$email, $mdp, $nom, $role]);
+            if ($inscrit) {
+                $_SESSION['infos']['success'] = 'Vous avez bien été inscrit.';
+                $_SESSION['infos']['info'] = 'Vous devez être client de Negomat pour participer, la vérification s\'effectue à la publication de votre photo.';
+                header('Location: connexion.php');
+            } else {
+                $_SESSION['infos']['warning'] = 'Lors de votre inscription en base de donnée';
+                header('Location: inscription.php');
+            }
         } else {
-            $_SESSION['infos']['warning'] = 'Lors de votre inscription en base de donnée';
+            $_SESSION['infos']['warning'] = 'Vous êtes déjà inscrit avec ce mail';
             header('Location: inscription.php');
         }
         exit();
@@ -132,13 +138,13 @@ class User
         $_SESSION['auth']['email'] = $_POST['email'];
     }
 
-    public static function supprimerUser()
+    public static function supprimer()
     {
         $pdo = Database::getPDO();
         $id = $_SESSION['auth']['id'];
         $req = $pdo->prepare("DELETE from Utilisateur where id = $id");
         $req->execute();
-        deconnect();
+        Database::deconnect();
         header('Location: index.php');
         $_SESSION['infos']['deleted'] = 'Votre compte à été supprimé';
         exit();

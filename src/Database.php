@@ -31,7 +31,7 @@ class Database
                 header('Location: index.php');
                 exit();
             } else {
-                $_SESSION['infos']['warning'] = 'Mmot de passe incorrect';
+                $_SESSION['infos']['warning'] = 'Mot de passe incorrect';
                 header('Location: connexion.php');
             }
         }
