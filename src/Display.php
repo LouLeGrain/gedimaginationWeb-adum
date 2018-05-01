@@ -40,7 +40,7 @@ class Display
                     case "warning":
                         echo "<div class='alert alert-warning alert-dismissable text-center'>
                     <a href='#' class='close' data-dismiss='alert' aria-label='close'>&times;</a>
-                    <strong>Erreur !</strong> $content</div>";
+                    <strong><span class='glyphicon glyphicon-warning-sign'></span> Erreur !</strong> $content</div>";
                         break;
                     case "info":
                         echo "<div class='alert alert-info alert-dismissable text-center'>

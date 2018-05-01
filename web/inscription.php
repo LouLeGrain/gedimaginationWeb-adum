@@ -22,6 +22,11 @@ Display::infos();?>
         </div>
         <div class="form-group">
             <div class="col-sm-6 col-sm-offset-3 col-md-4 col-md-offset-4">
+                <input type="password" name="mdpConf" class="form-control" placeholder="Mot de passe (confirmation)" required>
+            </div>
+        </div>
+        <div class="form-group">
+            <div class="col-sm-6 col-sm-offset-3 col-md-4 col-md-offset-4">
                 <button type="submit" class="btn btn-default btn-primary"><span class="glyphicon glyphicon-log-in"></span> S'inscrire</button>
             </div>
         </div>

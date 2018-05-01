@@ -28,6 +28,7 @@
                 </div>
                 <div class="collapse navbar-collapse" id="navbar-collapse-target">
                     <ul class="nav navbar-nav navbar-right">
+                        <a id ="btnFAQ" href="faq.php"><button class="btn btn-info">Une question ?</button></a>
                             <a id="btnVoter" href="vote.php"> <button type="submit" class="btn btn-default btn-primary">Voter !</button></a>
                             <li class="dropdown">
                             <a href="#" class="dropdown-toggle" data-toggle="dropdown">

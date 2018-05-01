@@ -13,7 +13,7 @@ Display::header();
                 <form  method="post" action="participation.php" enctype="multipart/form-data">
                 <div class='alert alert-info'>Entrez les 4 premiers numéros de votre ticket de caisse</div>
                 <div class="form-group">
-                    <input class="form-control col-md-2 col-lg-2" maxlength="4" id="ticket" type="text" name="codeTicket" placeholder="Ex : 0472"/>
+                    <input class="form-control col-md-2 col-lg-2" maxlength="4" id="ticket" type="text" name="numsTicket" placeholder="Ex : 0472"/>
                 </div>
                 <div class="form-group">
                         <input type="file" name="imgParticipation" class="voffset">

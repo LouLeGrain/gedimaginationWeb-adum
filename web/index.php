@@ -5,9 +5,7 @@ Display::header();
 ?>
         <div id="content" class="contentAccueil">
             <h1>Concours Gedima'Gination</h1>
-            <p>Bienvenue sur le site du concours Gedimagination développé par Négomat suite à la collaboration des groupes <b>Gedimat</b> et <b>Interway</b></p>
             <div class='row text-center'><img src="lib/logo_gedimat.png" alt="logo gedimat" width="300px"/></div>
-<br/>Vous pouvez vous inscrire au concours en créant un compte dans la section "Inscription" prévue a cet effet (accessible en haut à droite)<p/>
             <h2>Règlement</h2>
             <p>
 <b>Calendrier du jeu concours</b>: Le jeu concours est ouvert du <b>03/03/2018</b> au <b>31/03/2018</b>. Les votes peuvent débuter la semaine suivant la clôture des inscriptions et durent un mois. Le classement des meilleures réalisations sera effectué dès la clôture des votes et communiquée aux participants.

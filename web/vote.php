@@ -1,5 +1,10 @@
 <?php
 require '../src/autoload.php';
+if (!Helpers::isVotingTime()) {
+    $_SESSION['infos']['warning'] = "Les votes ne sont pas encore ouverts (ou sont clos) ! La période de vote est réduite à la dernière semaine de Mars.";
+    header("Location: index.php");
+    exit;
+}
 Helpers::processVotes();
 Display::infos();
 if (isset($_SESSION['auth'])) {
@@ -12,7 +17,6 @@ if (isset($_SESSION['auth'])) {
 ?>
         <div>
             <h1>Votes</h1>
-            <p>Vous pouvez voter pour le jeu concours uniquement en renseignant votre email. </p>
             <div class="row">
                 <h2>Voter</h2><hr/>
                 <form  method="post" action="vote.php" enctype="multipart/form-data">

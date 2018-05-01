@@ -6,12 +6,19 @@ class User
     {
         if (isset($_POST['login']) && $email == null) {
             $email = $_POST['login'];
+        }
 
-        }
         if (isset($_POST['mdp']) && $mdp == null) {
-            $mdp = password_hash($_POST['mdp'], PASSWORD_BCRYPT);
-            $role = "user";
+            if (isset($_POST['mdpConf']) && $_POST['mdpConf'] == $_POST['mdp']) {
+                $mdp = password_hash($_POST['mdp'], PASSWORD_BCRYPT);
+                $role = "user";
+            } else {
+                $_SESSION['infos']['warning'] = 'Lors de la confirmation du mot de passe !';
+                header("Location:inscription.php");
+                exit;
+            }
         }
+
         if (isset($_POST['nom']) && $nom == null) {
             $nom = $_POST['nom'];
         }
@@ -24,15 +31,18 @@ class User
                 $_SESSION['infos']['success'] = 'Vous avez bien été inscrit.';
                 $_SESSION['infos']['info'] = 'Vous devez être client de Negomat pour participer, la vérification s\'effectue à la publication de votre photo.';
                 header('Location: connexion.php');
+                exit;
             } else {
                 $_SESSION['infos']['warning'] = 'Lors de votre inscription en base de donnée';
                 header('Location: inscription.php');
+                exit;
             }
         } else {
             $_SESSION['infos']['warning'] = 'Vous êtes déjà inscrit avec ce mail';
             header('Location: inscription.php');
+            exit;
         }
-        exit();
+        exit;
     }
 
 /**
